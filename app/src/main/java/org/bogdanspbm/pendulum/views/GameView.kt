@@ -30,7 +30,7 @@ import java.util.Date
 
 @Composable
 fun GameView() {
-    val (gameState, setGameState) = remember { mutableStateOf(GameState()) }
+    val (gameState, setGameState) = remember { mutableStateOf(GameState().prepareGame()) }
 
     val updateInterval = 10
 
@@ -76,8 +76,16 @@ fun GameCanvas(game: GameState) {
         drawCircle(
             color = Color.Red,
             radius = pendulum.radius,
-            center = Offset(pendulum.x + 300, pendulum.y + 500)
+            center = Offset(pendulum.x + size.width / 2, size.height / 2)
         )
+
+        game.hooks.forEach { hook ->
+            drawCircle(
+                color = Color.Green,
+                radius = pendulum.radius,
+                center = Offset(hook.x + size.width / 2, size.height / 2 + pendulum.y - hook.y )
+            )
+        }
     })
 }
 
