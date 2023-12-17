@@ -15,8 +15,17 @@ data class Hook(
     fun getAngleToPendulum(pendulum: Pendulum): Double {
         val deltaX = x - pendulum.x
         val deltaY = y - pendulum.y
-        val tang = deltaY.toDouble() / deltaX.toDouble()
-        val angle = Math.atan(tang) - Math.PI / 2
+        if (deltaX == 0f) {
+            if (deltaY > 0) {
+                return Math.PI / 2 // 90 degrees (or pi/2 radians)
+            } else if (deltaY < 0) {
+                return -Math.PI / 2 // -90 degrees (or -pi/2 radians)
+            } else {
+                return 0.0 // Both x and y are zero, so the angle is 0 degrees (or 0 radians)
+            }
+        }
+
+        val angle = Math.atan2(deltaY.toDouble(), deltaX.toDouble())
         return angle
     }
 
@@ -31,8 +40,8 @@ data class Hook(
         val distanceToPendulum = distanceToPendulum(pendulum)
         pendulum.angle += delta.toDouble() / 1000;
 
-        val speedX = (x - Math.sin(pendulum.angle) * distanceToPendulum).toFloat() - pendulum.x
-        val speedY = (y - Math.cos(pendulum.angle) * distanceToPendulum).toFloat() - pendulum.y
+        val speedX = (x - Math.cos(pendulum.angle) * distanceToPendulum).toFloat() - pendulum.x
+        val speedY = (y - Math.sin(pendulum.angle) * distanceToPendulum).toFloat() - pendulum.y
         val speed = Math.sqrt(speedX.toDouble() * speedX + speedY.toDouble() * speedY)
 
         pendulum.speedX = (speedX / speed).toFloat()
@@ -41,6 +50,9 @@ data class Hook(
         pendulum.x += speedX
         pendulum.y += speedY
 
-        Log.d("ASDASDAS", "${(x - Math.sin(pendulum.angle) * distanceToPendulum).toFloat()}, ${speedX}, ${speed}, ${ (speedX / speed).toFloat()}")
+        Log.d(
+            "ANGLE",
+            "${Math.toDegrees(pendulum.angle)}"
+        )
     }
 }
