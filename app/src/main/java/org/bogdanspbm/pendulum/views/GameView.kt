@@ -79,11 +79,23 @@ fun GameCanvas(game: GameState) {
             center = Offset(pendulum.x + size.width / 2, size.height / 2)
         )
 
+        drawLine(
+            color = Color.Blue,
+            start = Offset(
+                pendulum.x + size.width / 2 - pendulum.speedX * 2000,
+                size.height / 2 - pendulum.speedY * 2000
+            ),
+            end = Offset(
+                pendulum.x + size.width / 2 + pendulum.speedX * 2000,
+                size.height / 2 + pendulum.speedY * 2000
+            )
+        )
+
         game.hooks.forEach { hook ->
             drawCircle(
                 color = Color.Green,
                 radius = pendulum.radius,
-                center = Offset(hook.x + size.width / 2, size.height / 2 + pendulum.y - hook.y )
+                center = Offset(hook.x + size.width / 2, size.height / 2 + pendulum.y - hook.y)
             )
         }
     })

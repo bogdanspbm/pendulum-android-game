@@ -30,15 +30,18 @@ data class Hook(
     }
 
     fun getRotateDirection(pendulum: Pendulum): Int {
-        val deltaX = x - pendulum.x
-        val deltaY = y - pendulum.y
-        val z = deltaX * pendulum.speedY - pendulum.speedX * deltaY
-        return if (z > 0) return 1 else -1
+        val deltaX = pendulum.x - x
+        val deltaY = pendulum.y - y
+        val z = deltaX * pendulum.speedY + pendulum.speedX * deltaY
+        val cosVal =
+            z / (Math.sqrt(deltaX.toDouble() * deltaX + deltaY * deltaY) * pendulum.getSpeed())
+        val angle = Math.acos(cosVal)
+        return if (angle  > Math.PI / 2) return 1 else -1
     }
 
     fun rotatePendulum(delta: Int, pendulum: Pendulum) {
         val distanceToPendulum = distanceToPendulum(pendulum)
-        pendulum.angle += delta.toDouble() / 1000;
+        pendulum.angle += pendulum.rotationDirection * delta.toDouble() / 1000;
 
         val speedX = (x - Math.cos(pendulum.angle) * distanceToPendulum).toFloat() - pendulum.x
         val speedY = (y - Math.sin(pendulum.angle) * distanceToPendulum).toFloat() - pendulum.y

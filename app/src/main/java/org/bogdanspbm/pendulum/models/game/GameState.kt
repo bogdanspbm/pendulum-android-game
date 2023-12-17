@@ -27,6 +27,7 @@ data class GameState(
         if (attachedHook == null) {
             attachedHook = getNearestHook()
             pendulum.angle = attachedHook!!.getAngleToPendulum(pendulum)
+            pendulum.rotationDirection = attachedHook!!.getRotateDirection(pendulum)
         }
 
         attachedHook!!.rotatePendulum(delta, pendulum)
