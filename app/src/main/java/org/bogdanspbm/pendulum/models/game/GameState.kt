@@ -9,8 +9,17 @@ data class GameState(
     var tick: Long = 0L,
     val pendulum: Pendulum = Pendulum()
 ) {
-    fun tickEvent(delta : Int) {
+    fun tickEvent(delta: Int) {
         tick += delta
+
+        if (!isPointerDown) {
+            return
+        }
+
         pendulum.x = sin(tick.toDouble() / 100).toFloat() * 100
+    }
+
+    companion object{
+        var isPointerDown = false
     }
 }
