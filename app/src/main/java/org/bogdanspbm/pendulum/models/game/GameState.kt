@@ -17,6 +17,7 @@ data class GameState(
     fun tickEvent(delta: Int) {
         tick += delta
 
+
         if (!isPointerDown) {
             pendulum.move(delta)
             attachedHook = null
