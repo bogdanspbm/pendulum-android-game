@@ -9,17 +9,18 @@ import kotlin.random.Random
 data class GameState(
     val time: Long = Date().time,
     var tick: Long = 0L,
+    val speed : Float = 1.5f,
     val pendulum: Pendulum = Pendulum(),
     val hooks: MutableList<Hook> = arrayListOf(),
     var attachedHook: Hook? = null
 ) {
 
     fun tickEvent(delta: Int) {
-        tick += delta
+        tick += (delta * speed).toInt()
 
 
         if (!isPointerDown) {
-            pendulum.move(delta)
+            pendulum.move( (delta * speed).toInt())
             attachedHook = null
             return
         }
@@ -30,7 +31,7 @@ data class GameState(
             pendulum.rotationDirection = attachedHook!!.getRotateDirection(pendulum)
         }
 
-        attachedHook!!.rotatePendulum(delta, pendulum)
+        attachedHook!!.rotatePendulum( (delta * speed).toInt(), pendulum)
     }
 
     fun prepareGame(): GameState {

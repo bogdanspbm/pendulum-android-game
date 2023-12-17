@@ -32,7 +32,7 @@ import java.util.Date
 fun GameView() {
     val (gameState, setGameState) = remember { mutableStateOf(GameState().prepareGame()) }
 
-    val updateInterval = 10
+    val updateInterval = 5
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -82,11 +82,11 @@ fun GameCanvas(game: GameState) {
         drawLine(
             color = Color.Blue,
             start = Offset(
-                pendulum.x + size.width / 2 - pendulum.speedX * 2000,
+                pendulum.x + size.width / 2 + pendulum.speedX * 2000,
                 size.height / 2 - pendulum.speedY * 2000
             ),
             end = Offset(
-                pendulum.x + size.width / 2 + pendulum.speedX * 2000,
+                pendulum.x + size.width / 2 - pendulum.speedX * 2000,
                 size.height / 2 + pendulum.speedY * 2000
             )
         )
