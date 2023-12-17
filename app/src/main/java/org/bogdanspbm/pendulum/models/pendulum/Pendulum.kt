@@ -1,5 +1,7 @@
 package org.bogdanspbm.pendulum.models.pendulum
 
+import androidx.compose.ui.geometry.Offset
+
 data class Pendulum(
     var x: Float = 0f,
     var y: Float = 0f,
@@ -7,9 +9,16 @@ data class Pendulum(
     var speedX: Float = 0f,
     var angle: Double = 0.toDouble(),
     var rotationDirection: Int = 1,
-    var radius: Float = 30f
+    var radius: Float = 30f,
+    var prevPositions: MutableList<Offset> = mutableListOf()
 ) {
     fun move(delta: Int) {
+        prevPositions.add(Offset(x, -y))
+
+        if (prevPositions.size > 100) {
+            prevPositions.removeAt(0)
+        }
+
         x += speedX * delta
         y += speedY * delta
     }
@@ -17,5 +26,6 @@ data class Pendulum(
     fun getSpeed(): Float {
         return Math.sqrt(speedY.toDouble() * speedY + speedX.toDouble() * speedX).toFloat()
     }
+
 
 }

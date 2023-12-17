@@ -53,8 +53,7 @@ data class Hook(
         pendulum.speedX = (speedX / speed).toFloat()
         pendulum.speedY = (speedY / speed).toFloat()
 
-        pendulum.x += speedX
-        pendulum.y += speedY
+        pendulum.move(delta)
 
         Log.d(
             "PENDULUM",

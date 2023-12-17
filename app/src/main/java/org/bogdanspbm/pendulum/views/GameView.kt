@@ -73,11 +73,6 @@ fun GameCanvas(game: GameState) {
             color = Color.Black, topLeft = Offset(size.width - 30, 0f),
             size = Size(30f, size.height)
         )
-        drawCircle(
-            color = Color.Red,
-            radius = pendulum.radius,
-            center = Offset(pendulum.x + size.width / 2, size.height / 2)
-        )
 
         drawLine(
             color = Color.Blue,
@@ -90,6 +85,34 @@ fun GameCanvas(game: GameState) {
                 size.height / 2 + pendulum.speedY * 2000
             )
         )
+
+        // Pendulum
+        drawCircle(
+            color = Color.Red,
+            radius = pendulum.radius,
+            center = Offset(pendulum.x + size.width / 2, size.height / 2)
+        )
+
+        pendulum.prevPositions.forEachIndexed { index, trailPosition ->
+            val alpha = (index.toFloat() / pendulum.prevPositions.size.toFloat()) / 10
+            drawCircle(
+                color = Color.Red.copy(alpha = alpha),
+                radius = pendulum.radius,
+                center = trailPosition + Offset(size.width / 2, size.height / 2 + pendulum.y)
+            )
+        }
+
+        if (game.attachedHook != null) {
+            drawLine(
+                color = Color.Gray,
+                start = Offset(pendulum.x + size.width / 2, size.height / 2),
+                end = Offset(
+                    game.attachedHook!!.x + size.width / 2,
+                    size.height / 2 + pendulum.y - game.attachedHook!!.y
+                ),
+                strokeWidth = 4f
+            )
+        }
 
         game.hooks.forEach { hook ->
             drawCircle(
