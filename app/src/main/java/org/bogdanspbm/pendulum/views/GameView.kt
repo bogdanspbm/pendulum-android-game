@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,10 +45,11 @@ import java.util.Date
 
 @Composable
 fun GameView() {
+    val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
     val fieldWidth = configuration.screenWidthDp * density
-    val (gameState, setGameState) = remember { mutableStateOf(GameState(fieldWidth = fieldWidth).prepareGame()) }
+    val (gameState, setGameState) = remember { mutableStateOf(GameState(fieldWidth = fieldWidth, context = context).prepareGame()) }
 
     val updateInterval = 5
 

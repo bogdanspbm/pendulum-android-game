@@ -1,9 +1,12 @@
 package org.bogdanspbm.pendulum.models.game
 
+import android.content.Context
 import androidx.compose.ui.geometry.Offset
 import org.bogdanspbm.pendulum.effects.ShakeEffect
 import org.bogdanspbm.pendulum.models.hook.Hook
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
+import org.bogdanspbm.pendulum.utils.getGameRecord
+import org.bogdanspbm.pendulum.utils.saveGameRecord
 import java.util.Date
 import kotlin.math.abs
 import kotlin.math.sin
@@ -18,10 +21,11 @@ data class GameState(
     val shakeEffect: ShakeEffect = ShakeEffect(),
     var fieldWidth: Float = 500f,
     var score: Int = 0,
-    var tick: Long = 0L
+    var tick: Long = 0L,
+    val context: Context? = null
 ) {
 
-    val recordItem = GameRecord(this, 200)
+    val recordItem: GameRecord = GameRecord(this, getGameRecord(context!!))
 
     fun isPendulumOutOfField(): Boolean {
         if (abs(pendulum.x) < fieldWidth / 2 - 30) {
@@ -38,8 +42,9 @@ data class GameState(
 
         tick += (delta * speed).toInt()
 
-        if(isPendulumOutOfField()){
+        if(isPendulumOutOfField() && !isCollided){
             isCollided = true
+            saveGameRecord(context!!, score)
             shakeEffect.enable(tick)
         }
 
