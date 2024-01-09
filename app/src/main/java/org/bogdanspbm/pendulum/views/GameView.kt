@@ -30,6 +30,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -40,7 +42,10 @@ import java.util.Date
 
 @Composable
 fun GameView() {
-    val (gameState, setGameState) = remember { mutableStateOf(GameState().prepareGame()) }
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current.density
+    val fieldWidth = configuration.screenWidthDp * density
+    val (gameState, setGameState) = remember { mutableStateOf(GameState(fieldWidth = fieldWidth).prepareGame()) }
 
     val updateInterval = 5
 
@@ -66,6 +71,7 @@ fun GameCanvas(game: GameState) {
             .pointerInteropFilter {
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {
+                        GameState.gameStarted = true
                         GameState.isPointerDown = true
                     }
 
@@ -78,11 +84,13 @@ fun GameCanvas(game: GameState) {
                 true
             }, onDraw = {
             drawRect(
-                color = Color.Black, topLeft = Offset(-30f, -30f) + game.getOffset(),
+                color = if (game.isPendulumOutOfField()) Color.Red else Color.Black,
+                topLeft = Offset(-30f, -30f) + game.getOffset(),
                 size = Size(60f, size.height + 60)
             )
             drawRect(
-                color = Color.Black, topLeft = Offset(size.width - 30, -30f) + game.getOffset(),
+                color = if (game.isPendulumOutOfField()) Color.Red else Color.Black,
+                topLeft = Offset(size.width - 30, -30f) + game.getOffset(),
                 size = Size(60f, size.height + 60)
             )
 
@@ -123,7 +131,10 @@ fun GameCanvas(game: GameState) {
             if (game.attachedHook != null) {
                 drawLine(
                     color = Color.Gray,
-                    start = Offset(pendulum.x + size.width / 2, size.height / 2) + game.getOffset(),
+                    start = Offset(
+                        pendulum.x + size.width / 2,
+                        size.height / 2
+                    ) + game.getOffset(),
                     end = Offset(
                         game.attachedHook!!.x + size.width / 2,
                         size.height / 2 + pendulum.y - game.attachedHook!!.y

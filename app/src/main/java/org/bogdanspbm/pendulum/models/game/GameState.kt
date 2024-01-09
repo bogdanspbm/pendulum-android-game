@@ -5,6 +5,7 @@ import org.bogdanspbm.pendulum.effects.ShakeEffect
 import org.bogdanspbm.pendulum.models.hook.Hook
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
 import java.util.Date
+import kotlin.math.abs
 import kotlin.math.sin
 import kotlin.random.Random
 
@@ -14,13 +15,24 @@ data class GameState(
     var attachedHook: Hook? = null,
     val pendulum: Pendulum = Pendulum(),
     val hooks: MutableList<Hook> = arrayListOf(),
-    val shakeEffect: ShakeEffect = ShakeEffect()
-) {
-
-    var score: Int = 0
+    val shakeEffect: ShakeEffect = ShakeEffect(),
+    var fieldWidth: Float = 500f,
+    var score: Int = 0,
     var tick: Long = 0L
+) {
+    fun isPendulumOutOfField(): Boolean {
+        if (abs(pendulum.x) < fieldWidth / 2 - 30) {
+            return false
+        }
+
+        return true
+    }
 
     fun tickEvent(delta: Int) {
+        if (!gameStarted) {
+            return
+        }
+
         tick += (delta * speed).toInt()
 
         shakeEffect.tickEvent(tick)
@@ -79,6 +91,7 @@ data class GameState(
     }
 
     companion object {
+        var gameStarted = false
         var isPointerDown = false
     }
 }

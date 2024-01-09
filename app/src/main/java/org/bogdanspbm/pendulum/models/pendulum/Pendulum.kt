@@ -1,6 +1,7 @@
 package org.bogdanspbm.pendulum.models.pendulum
 
 import androidx.compose.ui.geometry.Offset
+import kotlin.math.abs
 
 data class Pendulum(
     var x: Float = 0f,
@@ -26,6 +27,7 @@ data class Pendulum(
     fun getSpeed(): Float {
         return Math.sqrt(speedY.toDouble() * speedY + speedX.toDouble() * speedX).toFloat()
     }
+
 
 
 }
