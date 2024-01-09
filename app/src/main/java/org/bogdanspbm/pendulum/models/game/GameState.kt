@@ -35,6 +35,10 @@ data class GameState(
 
         tick += (delta * speed).toInt()
 
+        if(isPendulumOutOfField()){
+            shakeEffect.enable(tick)
+        }
+
         shakeEffect.tickEvent(tick)
 
         if (pendulum.y / 50 > score) {
