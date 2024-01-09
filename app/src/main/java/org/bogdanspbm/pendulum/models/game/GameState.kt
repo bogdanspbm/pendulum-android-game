@@ -1,5 +1,7 @@
 package org.bogdanspbm.pendulum.models.game
 
+import androidx.compose.ui.geometry.Offset
+import org.bogdanspbm.pendulum.effects.ShakeEffect
 import org.bogdanspbm.pendulum.models.hook.Hook
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
 import java.util.Date
@@ -8,19 +10,27 @@ import kotlin.random.Random
 
 data class GameState(
     val time: Long = Date().time,
-    var tick: Long = 0L,
-    val speed : Float = 1.5f,
+    val speed: Float = 1.5f,
+    var attachedHook: Hook? = null,
     val pendulum: Pendulum = Pendulum(),
     val hooks: MutableList<Hook> = arrayListOf(),
-    var attachedHook: Hook? = null
+    val shakeEffect: ShakeEffect = ShakeEffect()
 ) {
+
+    var score: Int = 0
+    var tick: Long = 0L
 
     fun tickEvent(delta: Int) {
         tick += (delta * speed).toInt()
 
+        shakeEffect.tickEvent(tick)
+
+        if (pendulum.y / 50 > score) {
+            score = (pendulum.y / 50).toInt()
+        }
 
         if (!isPointerDown) {
-            pendulum.move( (delta * speed).toInt())
+            pendulum.move((delta * speed).toInt())
             attachedHook = null
             return
         }
@@ -31,12 +41,17 @@ data class GameState(
             pendulum.rotationDirection = attachedHook!!.getRotateDirection(pendulum)
         }
 
-        attachedHook!!.rotatePendulum( (delta * speed).toInt(), pendulum)
+        attachedHook!!.rotatePendulum((delta * speed).toInt(), pendulum)
     }
 
     fun prepareGame(): GameState {
         this.generateHooks()
+        this.score = 0
         return this
+    }
+
+    fun getOffset(): Offset {
+        return shakeEffect.offset
     }
 
     private fun generateHooks() {

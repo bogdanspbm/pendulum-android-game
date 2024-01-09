@@ -3,25 +3,35 @@ package org.bogdanspbm.pendulum.views
 import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.bogdanspbm.pendulum.models.game.GameState
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
@@ -49,79 +59,105 @@ fun GameView() {
 @Composable
 fun GameCanvas(game: GameState) {
     val pendulum = game.pendulum
-    Canvas(modifier = Modifier
-        .fillMaxSize()
-        .pointerInteropFilter {
-            when (it.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    GameState.isPointerDown = true
+
+    Box(contentAlignment = Alignment.TopCenter) {
+        Canvas(modifier = Modifier
+            .fillMaxSize()
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        GameState.isPointerDown = true
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        GameState.isPointerDown = false
+                    }
+
+                    else -> false
                 }
-
-                MotionEvent.ACTION_UP -> {
-                    GameState.isPointerDown = false
-                }
-
-                else -> false
-            }
-            true
-        }, onDraw = {
-        drawRect(
-            color = Color.Black, topLeft = Offset(0f, 0f),
-            size = Size(30f, size.height)
-        )
-        drawRect(
-            color = Color.Black, topLeft = Offset(size.width - 30, 0f),
-            size = Size(30f, size.height)
-        )
-
-        drawLine(
-            color = Color.Blue,
-            start = Offset(
-                pendulum.x + size.width / 2 + pendulum.speedX * 2000,
-                size.height / 2 - pendulum.speedY * 2000
-            ),
-            end = Offset(
-                pendulum.x + size.width / 2 - pendulum.speedX * 2000,
-                size.height / 2 + pendulum.speedY * 2000
+                true
+            }, onDraw = {
+            drawRect(
+                color = Color.Black, topLeft = Offset(-30f, -30f) + game.getOffset(),
+                size = Size(60f, size.height + 60)
             )
-        )
-
-        // Pendulum
-        drawCircle(
-            color = Color.Red,
-            radius = pendulum.radius,
-            center = Offset(pendulum.x + size.width / 2, size.height / 2)
-        )
-
-        pendulum.prevPositions.forEachIndexed { index, trailPosition ->
-            val alpha = (index.toFloat() / pendulum.prevPositions.size.toFloat()) / 10
-            drawCircle(
-                color = Color.Red.copy(alpha = alpha),
-                radius = pendulum.radius,
-                center = trailPosition + Offset(size.width / 2, size.height / 2 + pendulum.y)
+            drawRect(
+                color = Color.Black, topLeft = Offset(size.width - 30, -30f) + game.getOffset(),
+                size = Size(60f, size.height + 60)
             )
-        }
 
-        if (game.attachedHook != null) {
+            // Line
             drawLine(
-                color = Color.Gray,
-                start = Offset(pendulum.x + size.width / 2, size.height / 2),
+                color = Color.Blue,
+                start = Offset(
+                    pendulum.x + size.width / 2 + pendulum.speedX * 2000,
+                    size.height / 2 - pendulum.speedY * 2000
+                ) + game.getOffset(),
                 end = Offset(
-                    game.attachedHook!!.x + size.width / 2,
-                    size.height / 2 + pendulum.y - game.attachedHook!!.y
-                ),
-                strokeWidth = 4f
+                    pendulum.x + size.width / 2 - pendulum.speedX * 2000,
+                    size.height / 2 + pendulum.speedY * 2000
+                ) + game.getOffset()
             )
-        }
 
-        game.hooks.forEach { hook ->
+            // Pendulum
             drawCircle(
-                color = Color.Green,
+                color = Color.Red,
                 radius = pendulum.radius,
-                center = Offset(hook.x + size.width / 2, size.height / 2 + pendulum.y - hook.y)
+                center = Offset(pendulum.x + size.width / 2, size.height / 2) + game.getOffset()
+            )
+
+            pendulum.prevPositions.forEachIndexed { index, trailPosition ->
+                val alpha = (index.toFloat() / pendulum.prevPositions.size.toFloat()) / 10
+                drawCircle(
+                    color = Color.Red.copy(alpha = alpha),
+                    radius = pendulum.radius * (alpha * 5 + 0.5f),
+                    center = trailPosition + Offset(
+                        size.width / 2,
+                        size.height / 2 + pendulum.y
+                    ) + game.getOffset()
+                )
+            }
+
+
+            // Hook
+            if (game.attachedHook != null) {
+                drawLine(
+                    color = Color.Gray,
+                    start = Offset(pendulum.x + size.width / 2, size.height / 2) + game.getOffset(),
+                    end = Offset(
+                        game.attachedHook!!.x + size.width / 2,
+                        size.height / 2 + pendulum.y - game.attachedHook!!.y
+                    ) + game.getOffset(),
+                    strokeWidth = 4f
+                )
+            }
+
+            game.hooks.forEach { hook ->
+                drawCircle(
+                    color = Color.Green,
+                    radius = pendulum.radius,
+                    center = Offset(
+                        hook.x + size.width / 2,
+                        size.height / 2 + pendulum.y - hook.y
+                    ) + game.getOffset()
+                )
+            }
+        })
+
+        Box(
+            Modifier
+                .offset(y = 8.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Black.copy(alpha = 0.1f))
+        ) {
+            Text(
+                modifier = Modifier.padding(12.dp), text = "${
+                    game.score
+                }",
+                style = MaterialTheme.typography.headlineMedium
             )
         }
-    })
+    }
 }
 
 @Preview(showBackground = true)
