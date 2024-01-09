@@ -20,6 +20,9 @@ data class GameState(
     var score: Int = 0,
     var tick: Long = 0L
 ) {
+
+    val recordItem = GameRecord(this, 200)
+
     fun isPendulumOutOfField(): Boolean {
         if (abs(pendulum.x) < fieldWidth / 2 - 30) {
             return false
@@ -102,6 +105,6 @@ data class GameState(
     companion object {
         var gameStarted = false
         var isPointerDown = false
-        var isCollided = false;
+        var isCollided = false
     }
 }

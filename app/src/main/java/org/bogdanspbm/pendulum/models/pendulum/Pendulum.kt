@@ -1,6 +1,7 @@
 package org.bogdanspbm.pendulum.models.pendulum
 
 import androidx.compose.ui.geometry.Offset
+import org.bogdanspbm.pendulum.models.game.GameState
 import kotlin.math.abs
 
 data class Pendulum(

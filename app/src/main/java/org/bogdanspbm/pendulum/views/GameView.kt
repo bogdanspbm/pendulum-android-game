@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -58,12 +60,15 @@ fun GameView() {
     }
 
     GameCanvas(game = gameState)
+
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun GameCanvas(game: GameState) {
     val pendulum = game.pendulum
+    val textMeasurer = rememberTextMeasurer()
+
 
     Box(contentAlignment = Alignment.TopCenter) {
         Canvas(modifier = Modifier
@@ -93,6 +98,8 @@ fun GameCanvas(game: GameState) {
                 topLeft = Offset(size.width - 30, -30f) + game.getOffset(),
                 size = Size(60f, size.height + 60)
             )
+
+            game.recordItem.drawGameRecord(this, textMeasurer)
 
             // Line
             drawLine(
@@ -167,6 +174,20 @@ fun GameCanvas(game: GameState) {
                 }",
                 style = MaterialTheme.typography.headlineMedium
             )
+        }
+
+        if (!GameState.gameStarted) {
+            Box(
+                Modifier
+                    .offset(y = 600.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.Black.copy(alpha = 0.1f))
+            ) {
+                Text(
+                    modifier = Modifier.padding(12.dp), text = "Press to Start",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            }
         }
     }
 }
