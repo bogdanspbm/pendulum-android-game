@@ -36,10 +36,15 @@ data class GameState(
         tick += (delta * speed).toInt()
 
         if(isPendulumOutOfField()){
+            isCollided = true
             shakeEffect.enable(tick)
         }
 
         shakeEffect.tickEvent(tick)
+
+        if(isCollided){
+            return
+        }
 
         if (pendulum.y / 50 > score) {
             score = (pendulum.y / 50).toInt()
@@ -97,5 +102,6 @@ data class GameState(
     companion object {
         var gameStarted = false
         var isPointerDown = false
+        var isCollided = false;
     }
 }
