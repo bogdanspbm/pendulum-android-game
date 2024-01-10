@@ -42,15 +42,17 @@ data class GameState(
 
         tick += (delta * speed).toInt()
 
-        if(isPendulumOutOfField() && !isCollided){
+        if (isPendulumOutOfField() && !isCollided) {
             isCollided = true
-            saveGameRecord(context!!, score)
+            if (score > getGameRecord(context!!)) {
+                saveGameRecord(context, score)
+            }
             shakeEffect.enable(tick)
         }
 
         shakeEffect.tickEvent(tick)
 
-        if(isCollided){
+        if (isCollided) {
             return
         }
 

@@ -1,25 +1,17 @@
 package org.bogdanspbm.pendulum.views
 
-import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -39,9 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.bogdanspbm.pendulum.models.game.GameState
-import org.bogdanspbm.pendulum.models.pendulum.Pendulum
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
 import java.util.Date
+import kotlin.math.abs
 
 @Composable
 fun GameView() {
@@ -49,7 +40,14 @@ fun GameView() {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
     val fieldWidth = configuration.screenWidthDp * density
-    val (gameState, setGameState) = remember { mutableStateOf(GameState(fieldWidth = fieldWidth, context = context).prepareGame()) }
+    val (gameState, setGameState) = remember {
+        mutableStateOf(
+            GameState(
+                fieldWidth = fieldWidth,
+                context = context
+            ).prepareGame()
+        )
+    }
 
     val updateInterval = 5
 
@@ -74,6 +72,7 @@ fun GameCanvas(game: GameState) {
 
     Box(contentAlignment = Alignment.TopCenter) {
         Canvas(modifier = Modifier
+            .background(Color.DarkGray)
             .fillMaxSize()
             .pointerInteropFilter {
                 when (it.action) {
@@ -101,7 +100,7 @@ fun GameCanvas(game: GameState) {
                 size = Size(60f, size.height + 60)
             )
 
-            game.recordItem.drawGameRecord(this, textMeasurer)
+            game.recordItem.draw(this, textMeasurer)
 
             // Line
             drawLine(
@@ -117,23 +116,7 @@ fun GameCanvas(game: GameState) {
             )
 
             // Pendulum
-            drawCircle(
-                color = Color.Red,
-                radius = pendulum.radius,
-                center = Offset(pendulum.x + size.width / 2, size.height / 2) + game.getOffset()
-            )
-
-            pendulum.prevPositions.forEachIndexed { index, trailPosition ->
-                val alpha = (index.toFloat() / pendulum.prevPositions.size.toFloat()) / 10
-                drawCircle(
-                    color = Color.Red.copy(alpha = alpha),
-                    radius = pendulum.radius * (alpha * 5 + 0.5f),
-                    center = trailPosition + Offset(
-                        size.width / 2,
-                        size.height / 2 + pendulum.y
-                    ) + game.getOffset()
-                )
-            }
+            pendulum.draw(this, game.getOffset())
 
 
             // Hook
@@ -152,16 +135,15 @@ fun GameCanvas(game: GameState) {
                 )
             }
 
-            game.hooks.forEach { hook ->
-                drawCircle(
-                    color = Color.Green,
-                    radius = pendulum.radius,
-                    center = Offset(
-                        hook.x + size.width / 2,
-                        size.height / 2 + pendulum.y - hook.y
-                    ) + game.getOffset()
-                )
+            for (hook in game.hooks) {
+                if (abs((hook.y - pendulum.y + (hook.radius - pendulum.radius))) > size.height / 2) {
+                    continue
+                }
+
+                hook.draw(this, game.getOffset() + Offset(0f, game.pendulum.y))
             }
+
+
         })
 
         Box(

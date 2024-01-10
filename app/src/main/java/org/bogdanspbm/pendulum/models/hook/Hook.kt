@@ -1,12 +1,16 @@
 package org.bogdanspbm.pendulum.models.hook
 
 import android.util.Log
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
+import org.bogdanspbm.pendulum.utils.fromHex
 
 data class Hook(
     var x: Float = 0f,
     var y: Float = 0f,
-    var radius: Float = 20f
+    var radius: Float = 45f
 ) {
     fun distanceToPendulum(pendulum: Pendulum): Double {
         return Math.sqrt((pendulum.x - x).toDouble() * (pendulum.x - x).toDouble() + (pendulum.y - y).toDouble() * (pendulum.y - y).toDouble())
@@ -42,7 +46,7 @@ data class Hook(
     fun rotatePendulum(delta: Int, pendulum: Pendulum) {
         val distanceToPendulum = distanceToPendulum(pendulum)
         pendulum.angle += pendulum.rotationDirection * delta.toDouble() / Math.max(
-            radius.toDouble(),
+            radius.toDouble() / 2,
             distanceToPendulum
         )
 
@@ -58,6 +62,44 @@ data class Hook(
         Log.d(
             "PENDULUM",
             "${pendulum}"
+        )
+    }
+
+    fun draw(scope: DrawScope, offset: Offset) {
+        scope.drawCircle(
+            color = Color.fromHex("#E1D03A"),
+            radius = this.radius,
+            center = Offset(
+                x + scope.size.width / 2,
+                scope.size.height / 2 - y
+            ) + offset
+        )
+
+        scope.drawCircle(
+            color = Color.fromHex("#ECE424"),
+            radius = this.radius - 4,
+            center = Offset(
+                x + scope.size.width / 2,
+                scope.size.height / 2 - y
+            ) + offset
+        )
+
+        scope.drawCircle(
+            color = Color.fromHex("#51336F"),
+            radius = this.radius / 2,
+            center = Offset(
+                x + scope.size.width / 2,
+                scope.size.height / 2 - y
+            ) + offset
+        )
+
+        scope.drawCircle(
+            color = Color.fromHex("#3C2D55"),
+            radius = this.radius / 2 - 4,
+            center = Offset(
+                x + scope.size.width / 2,
+                scope.size.height / 2 - y
+            ) + offset
         )
     }
 }

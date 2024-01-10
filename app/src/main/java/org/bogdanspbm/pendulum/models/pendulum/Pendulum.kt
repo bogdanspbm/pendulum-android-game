@@ -1,6 +1,8 @@
 package org.bogdanspbm.pendulum.models.pendulum
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.bogdanspbm.pendulum.models.game.GameState
 import kotlin.math.abs
 
@@ -11,9 +13,10 @@ data class Pendulum(
     var speedX: Float = 0f,
     var angle: Double = 0.toDouble(),
     var rotationDirection: Int = 1,
-    var radius: Float = 30f,
+    var radius: Float = 40f,
     var prevPositions: MutableList<Offset> = mutableListOf()
 ) {
+
     fun move(delta: Int) {
         prevPositions.add(Offset(x, -y))
 
@@ -27,6 +30,27 @@ data class Pendulum(
 
     fun getSpeed(): Float {
         return Math.sqrt(speedY.toDouble() * speedY + speedX.toDouble() * speedX).toFloat()
+    }
+
+    fun draw(scope: DrawScope, offset: Offset){
+
+        scope.drawCircle(
+            color = Color.Red,
+            radius = radius,
+            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
+        )
+
+        prevPositions.forEachIndexed { index, trailPosition ->
+            val alpha = (index.toFloat() / prevPositions.size.toFloat()) / 10
+            scope.drawCircle(
+                color = Color.Red.copy(alpha = alpha),
+                radius = radius * (alpha * 5 + 0.5f),
+                center = trailPosition + Offset(
+                    scope.size.width / 2,
+                    scope.size.height / 2 + y
+                ) + offset
+            )
+        }
     }
 
 
