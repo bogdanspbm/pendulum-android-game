@@ -27,7 +27,7 @@ data class GameState(
     val recordItem: GameRecord = GameRecord(this, getGameRecord(context!!))
 
     fun isPendulumOutOfField(): Boolean {
-        if (abs(pendulum.x) < fieldWidth / 2 - 30) {
+        if (abs(pendulum.x) < fieldWidth / 2 - 60 - pendulum.radius) {
             return false
         }
 

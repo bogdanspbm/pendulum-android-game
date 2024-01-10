@@ -32,6 +32,7 @@ import org.bogdanspbm.pendulum.models.field.Borders
 import org.bogdanspbm.pendulum.models.field.GameBackground
 import org.bogdanspbm.pendulum.models.game.GameState
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
+import org.bogdanspbm.pendulum.utils.dpToPx
 import java.util.Date
 import kotlin.math.abs
 
@@ -73,7 +74,7 @@ fun GameCanvas(game: GameState) {
 
 
     Box(contentAlignment = Alignment.TopCenter) {
-        GameBackground(modifier = Modifier.fillMaxSize(), offset = game.getOffset())
+        GameBackground(modifier = Modifier.fillMaxSize(), offset = game.getOffset() + Offset(0f, game.pendulum.y))
         Canvas(modifier = Modifier
             .fillMaxSize()
             .pointerInteropFilter {
