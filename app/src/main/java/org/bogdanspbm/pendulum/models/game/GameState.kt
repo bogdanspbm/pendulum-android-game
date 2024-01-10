@@ -9,7 +9,6 @@ import org.bogdanspbm.pendulum.utils.getGameRecord
 import org.bogdanspbm.pendulum.utils.saveGameRecord
 import java.util.Date
 import kotlin.math.abs
-import kotlin.math.sin
 import kotlin.random.Random
 
 data class GameState(

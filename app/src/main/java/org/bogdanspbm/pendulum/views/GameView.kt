@@ -19,7 +19,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
@@ -29,11 +28,10 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.field.Borders
+import org.bogdanspbm.pendulum.models.field.GameBackground
 import org.bogdanspbm.pendulum.models.game.GameState
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
-import org.bogdanspbm.pendulum.utils.fromHex
 import java.util.Date
 import kotlin.math.abs
 
@@ -72,12 +70,11 @@ fun GameCanvas(game: GameState) {
     val pendulum = game.pendulum
     val textMeasurer = rememberTextMeasurer()
     val borders = Borders()
-    val background = Background()
 
 
     Box(contentAlignment = Alignment.TopCenter) {
+        GameBackground(modifier = Modifier.fillMaxSize(), offset = game.getOffset())
         Canvas(modifier = Modifier
-            .background(Color.fromHex("#51336F"))
             .fillMaxSize()
             .pointerInteropFilter {
                 when (it.action) {
@@ -97,7 +94,6 @@ fun GameCanvas(game: GameState) {
 
 
             game.recordItem.draw(this, textMeasurer)
-            background.draw(this, game.getOffset())
             borders.draw(this, game.getOffset())
 
             // Line

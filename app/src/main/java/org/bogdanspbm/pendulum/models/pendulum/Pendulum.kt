@@ -3,9 +3,7 @@ package org.bogdanspbm.pendulum.models.pendulum
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import org.bogdanspbm.pendulum.models.game.GameState
 import org.bogdanspbm.pendulum.utils.fromHex
-import kotlin.math.abs
 
 data class Pendulum(
     var x: Float = 0f,

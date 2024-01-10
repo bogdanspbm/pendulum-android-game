@@ -2,15 +2,9 @@ package org.bogdanspbm.pendulum.models.field
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import androidx.compose.ui.graphics.Brush
-
-import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.graphics.rotationMatrix
 import org.bogdanspbm.pendulum.utils.fromHex
 
 class Borders {
