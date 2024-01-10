@@ -4,6 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.bogdanspbm.pendulum.models.game.GameState
+import org.bogdanspbm.pendulum.utils.fromHex
 import kotlin.math.abs
 
 data class Pendulum(
@@ -35,8 +36,14 @@ data class Pendulum(
     fun draw(scope: DrawScope, offset: Offset){
 
         scope.drawCircle(
-            color = Color.Red,
+            color = Color.fromHex("#C40000"),
             radius = radius,
+            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
+        )
+
+        scope.drawCircle(
+            color = Color.Red,
+            radius = radius - 4,
             center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
         )
 
