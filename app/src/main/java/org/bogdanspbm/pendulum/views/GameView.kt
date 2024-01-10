@@ -28,8 +28,8 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.field.Borders
-import org.bogdanspbm.pendulum.models.field.GameBackground
 import org.bogdanspbm.pendulum.models.game.GameState
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
 import org.bogdanspbm.pendulum.utils.dpToPx
@@ -71,10 +71,10 @@ fun GameCanvas(game: GameState) {
     val pendulum = game.pendulum
     val textMeasurer = rememberTextMeasurer()
     val borders = Borders()
+    val background = Background()
 
 
     Box(contentAlignment = Alignment.TopCenter) {
-        GameBackground(modifier = Modifier.fillMaxSize(), offset = game.getOffset() + Offset(0f, game.pendulum.y))
         Canvas(modifier = Modifier
             .fillMaxSize()
             .pointerInteropFilter {
@@ -95,6 +95,7 @@ fun GameCanvas(game: GameState) {
 
 
             game.recordItem.draw(this, textMeasurer)
+            background.draw(this, game.getOffset() + Offset(0f, pendulum.y % 1200))
             borders.draw(this, game.getOffset())
 
             // Line
