@@ -11,50 +11,50 @@ class Borders {
     fun draw(scope: DrawScope, offset: Offset) {
         scope.drawRect(
             color = Color.fromHex("#3C2D55"),
-            topLeft = Offset(-30f, -30f) + offset,
-            size = Size(60f, scope.size.height + 60)
+            topLeft = Offset(-60f, -30f) + offset,
+            size = Size(120f, scope.size.height + 60)
         )
         scope.drawRect(
             color = Color.fromHex("#51336F"),
-            topLeft = Offset(-26f, -30f) + offset,
-            size = Size(52f, scope.size.height + 60)
+            topLeft = Offset(-52f, -30f) + offset,
+            size = Size(104f, scope.size.height + 60)
         )
 
         scope.drawRect(
             color = Color.fromHex("#3C2D55"),
-            topLeft = Offset(scope.size.width - 30, -30f) + offset,
-            size = Size(60f, scope.size.height + 60)
+            topLeft = Offset(scope.size.width - 60f, -30f) + offset,
+            size = Size(120f, scope.size.height + 60)
         )
         scope.drawRect(
             color = Color.fromHex("#51336F"),
-            topLeft = Offset(scope.size.width - 26, -30f) + offset,
-            size = Size(52f, scope.size.height + 60)
+            topLeft = Offset(scope.size.width - 52f, -30f) + offset,
+            size = Size(104f, scope.size.height + 60)
         )
 
         // Shadow
         val brushLeft = Brush.horizontalGradient(
             colors = listOf(Color.Black.copy(alpha = 0.2f), Color.Transparent),
-            startX = 30f,
-            endX = 120f
+            startX = 60f,
+            endX = 150f
         )
 
         scope.drawRect(
             brush = brushLeft,
-            topLeft = Offset(30f, -30f) + offset,
-            size = Size(120f, scope.size.height + 60)
+            topLeft = Offset(60f, -30f) + offset,
+            size = Size(150f, scope.size.height + 60)
         )
 
         val brushRight = Brush.horizontalGradient(
             colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.2f)),
-            startX = scope.size.width - 150,
-            endX = scope.size.width - 30
+            startX = scope.size.width - 210,
+            endX = scope.size.width - 60
         )
 
 
         scope.drawRect(
             brush = brushRight,
-            topLeft = Offset(scope.size.width - 150, -30f) + offset,
-            size = Size(120f, scope.size.height + 60)
+            topLeft = Offset(scope.size.width - 210, -30f) + offset,
+            size = Size(150f, scope.size.height + 60)
         )
 
     }
