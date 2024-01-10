@@ -136,7 +136,7 @@ fun GameCanvas(game: GameState) {
                     continue
                 }
 
-                hook.draw(this, game.getOffset() + Offset(0f, game.pendulum.y))
+                hook.draw(this, game.getOffset() + Offset(0f, game.pendulum.y), game.tick)
             }
 
 

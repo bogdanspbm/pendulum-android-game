@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
 import org.bogdanspbm.pendulum.utils.fromHex
+import org.bogdanspbm.pendulum.utils.lerpColor
+import kotlin.math.sin
 
 data class Hook(
     var x: Float = 0f,
@@ -65,9 +67,9 @@ data class Hook(
         )
     }
 
-    fun draw(scope: DrawScope, offset: Offset) {
+    fun draw(scope: DrawScope, offset: Offset, tick: Long) {
         scope.drawCircle(
-            color = Color.fromHex("#E1D03A"),
+            color = Color.fromHex("#373737"),
             radius = this.radius,
             center = Offset(
                 x + scope.size.width / 2,
@@ -76,7 +78,7 @@ data class Hook(
         )
 
         scope.drawCircle(
-            color = Color.fromHex("#ECE424"),
+            color = Color.fromHex("#585858"),
             radius = this.radius - 4,
             center = Offset(
                 x + scope.size.width / 2,
@@ -85,7 +87,7 @@ data class Hook(
         )
 
         scope.drawCircle(
-            color = Color.fromHex("#51336F"),
+            color = Color.fromHex("#373737"),
             radius = this.radius / 2,
             center = Offset(
                 x + scope.size.width / 2,
@@ -94,7 +96,7 @@ data class Hook(
         )
 
         scope.drawCircle(
-            color = Color.fromHex("#3C2D55"),
+            color = lerpColor(Color.fromHex("#121212"), Color.fromHex("DFD600"), (sin(tick.toDouble() / 300).toFloat() + 1) / 2),
             radius = this.radius / 2 - 4,
             center = Offset(
                 x + scope.size.width / 2,
