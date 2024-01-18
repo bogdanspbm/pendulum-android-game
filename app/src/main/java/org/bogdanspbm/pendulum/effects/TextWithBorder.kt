@@ -1,8 +1,11 @@
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Paint
@@ -17,15 +20,21 @@ import org.bogdanspbm.pendulum.ui.theme.BungeeFontFamily
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
 
 @Composable
-fun OutlinedText(text: String = ""){
+fun OutlinedText(
+    modifier: Modifier = Modifier,
+    textColor: Int = Color.WHITE,
+    text: String = "",
+    textStrokeWidth : Float = 18f,
+    fontSize: Float = 100f
+) {
 
     val textPaintStroke = Paint().asFrameworkPaint().apply {
         isAntiAlias = true
         style = android.graphics.Paint.Style.STROKE
-        textSize = 100f
-        color = android.graphics.Color.BLACK
-        strokeWidth = 12f
-        strokeMiter= 10f
+        textSize = fontSize
+        color = Color.BLACK
+        strokeWidth = textStrokeWidth
+        strokeMiter = 10f
         typeface = ResourcesCompat.getFont(LocalContext.current, R.font.bungee)
         strokeJoin = android.graphics.Paint.Join.ROUND
     }
@@ -34,26 +43,26 @@ fun OutlinedText(text: String = ""){
     val textPaint = Paint().asFrameworkPaint().apply {
         isAntiAlias = true
         style = android.graphics.Paint.Style.FILL
-        textSize = 100f
-        color = android.graphics.Color.WHITE
+        textSize = fontSize
+        color = textColor
         typeface = ResourcesCompat.getFont(LocalContext.current, R.font.bungee)
     }
 
     Canvas(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         onDraw = {
             drawIntoCanvas {
                 it.nativeCanvas.drawText(
                     text,
-                    200f,
-                    200.dp.toPx(),
+                    0f,
+                    fontSize,
                     textPaintStroke
                 )
 
                 it.nativeCanvas.drawText(
                     text,
-                    200f,
-                    200.dp.toPx(),
+                    0f,
+                    fontSize,
                     textPaint
                 )
             }
@@ -65,6 +74,6 @@ fun OutlinedText(text: String = ""){
 @Composable
 fun GreetingPreview() {
     PendulumTheme {
-        OutlinedText(text = "Hello, World!")
+        OutlinedText(modifier = Modifier.size(600.dp, 80.dp), text = "Hello, World!")
     }
 }

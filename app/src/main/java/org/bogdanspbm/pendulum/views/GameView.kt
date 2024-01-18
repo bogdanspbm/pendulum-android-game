@@ -1,5 +1,6 @@
 package org.bogdanspbm.pendulum.views
 
+import OutlinedText
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +38,8 @@ import org.bogdanspbm.pendulum.models.field.Borders
 import org.bogdanspbm.pendulum.models.game.GameState
 import org.bogdanspbm.pendulum.ui.theme.BungeeTypography
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
+import org.bogdanspbm.pendulum.utils.fromHex
+import org.bogdanspbm.pendulum.utils.getGameRecord
 import java.util.Date
 import kotlin.math.abs
 
@@ -71,6 +76,8 @@ fun GameView() {
 @Composable
 fun GameCanvas(game: GameState) {
     val pendulum = game.pendulum
+    val context = LocalContext.current
+    val gameRecord = getGameRecord(context!!)
     val textMeasurer = rememberTextMeasurer()
     val borders = Borders()
     val background = Background()
@@ -145,12 +152,18 @@ fun GameCanvas(game: GameState) {
         })
 
         Column(
-            modifier= Modifier.fillMaxWidth().offset(x = 32.dp, y = -24.dp),
-            horizontalAlignment = Alignment.Start)
-         {
-            Text(text = "${game.score}",
-                style = BungeeTypography.titleLarge,
-                color = Color.White
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset(x = 32.dp),
+            horizontalAlignment = Alignment.Start
+        )
+        {
+            OutlinedText(modifier = Modifier.height(48.dp), text = "${game.score}")
+            OutlinedText(
+                modifier = Modifier.height(48.dp).offset(y= -6.dp),
+                fontSize = 50f,
+                textColor = Color.fromHex("FFC700").toArgb(),
+                text = "${gameRecord}"
             )
         }
 
