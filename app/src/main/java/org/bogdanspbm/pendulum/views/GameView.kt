@@ -35,6 +35,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.field.Borders
@@ -47,7 +49,10 @@ import java.util.Date
 import kotlin.math.abs
 
 @Composable
-fun GameView() {
+fun GameView(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController()
+) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
@@ -187,7 +192,9 @@ fun GameCanvas(game: GameState) {
                     .background(Color.Black.copy(alpha = 0.1f))
             ) {
                 OutlinedText(
-                    modifier = Modifier.offset(y=8.dp).fillMaxSize(),
+                    modifier = Modifier
+                        .offset(y = 8.dp)
+                        .fillMaxSize(),
                     text = "Press To Start",
                     alignment = Paint.Align.CENTER
                 )

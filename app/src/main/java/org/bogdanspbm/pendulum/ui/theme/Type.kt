@@ -16,28 +16,28 @@ val BungeeTypography = Typography(
         fontFamily = BungeeFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
+        lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     ),
     titleLarge = TextStyle(
         fontFamily = BungeeFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 48.sp,
-        lineHeight = 56.sp,
+        lineHeight = 48.sp,
         letterSpacing = 0.sp
     ),
     titleMedium =TextStyle(
         fontFamily = BungeeFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp,
-        lineHeight = 30.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.sp
     ) ,
     labelSmall = TextStyle(
         fontFamily = BungeeFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
-        lineHeight = 16.sp,
+        lineHeight = 11.sp,
         letterSpacing = 0.5.sp
     )
 )

@@ -39,24 +39,6 @@ fun GameOverView(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun MenuButton(text: String = "Press", modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .height(42.dp)
-            .fillMaxWidth()
-            .background(Color.Black.copy(alpha = 0.05f)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            modifier = Modifier
-                .offset(y = -2.dp)
-                .padding(0.dp), text = text,
-            style = MaterialTheme.typography.headlineMedium
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

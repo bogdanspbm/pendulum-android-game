@@ -24,6 +24,7 @@ import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
 fun OutlinedText(
     modifier: Modifier = Modifier,
     textColor: Int = Color.WHITE,
+    outlineColor: Int = Color.BLACK,
     text: String = "",
     alignment: android.graphics.Paint.Align? = android.graphics.Paint.Align.LEFT,
     textStrokeWidth: Float = 18f,
@@ -34,7 +35,7 @@ fun OutlinedText(
         isAntiAlias = true
         style = android.graphics.Paint.Style.STROKE
         textSize = fontSize
-        color = Color.BLACK
+        color = outlineColor
         strokeWidth = textStrokeWidth
         strokeMiter = 10f
         textAlign = alignment
