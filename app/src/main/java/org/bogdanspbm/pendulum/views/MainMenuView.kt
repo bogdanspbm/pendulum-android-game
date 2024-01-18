@@ -2,6 +2,8 @@ package org.bogdanspbm.pendulum.views
 
 import OutlinedText
 import android.graphics.Paint
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,17 +19,20 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import org.bogdanspbm.pendulum.R
 import org.bogdanspbm.pendulum.enums.ENavigation
 import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.game.GameState
@@ -37,8 +42,13 @@ import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
 import org.bogdanspbm.pendulum.utils.fromHex
 
 @Composable
-fun MainMenuView(modifier: Modifier = Modifier, navController: NavController = rememberNavController()) {
+fun MainMenuView(modifier: Modifier = Modifier, navController: NavController = rememberNavController(), mediaPlayer: MediaPlayer  = MediaPlayer()) {
     val background = Background()
+    val context = LocalContext.current
+    val effectPlayer = remember { MediaPlayer.create(context, R.raw.start_level) }
+
+
+
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
             background.draw(this, Offset(0f, 0f))
@@ -72,6 +82,13 @@ fun MainMenuView(modifier: Modifier = Modifier, navController: NavController = r
                 .padding(20.dp)
         ) {
             MenuButton(text = "Start", onClick = {
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+                mediaPlayer.setDataSource(context, Uri.parse("android.resource://${context.packageName}/${R.raw.game_sound}"))
+                mediaPlayer.prepare()
+                mediaPlayer.start()
+                effectPlayer.start()
+                effectPlayer.setOnCompletionListener { mp -> mp.release() }
                 GameState.gameStarted = false
                 GameState.isPointerDown = false
                 GameState.isCollided = false

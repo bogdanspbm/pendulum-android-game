@@ -2,6 +2,8 @@ package org.bogdanspbm.pendulum.views
 
 import OutlinedText
 import android.graphics.Paint
+import android.media.MediaPlayer
+import android.net.Uri
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
+import org.bogdanspbm.pendulum.R
 import org.bogdanspbm.pendulum.enums.ENavigation
 import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.field.Borders
@@ -53,7 +56,7 @@ import kotlin.math.abs
 @Composable
 fun GameView(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberNavController()
+    navController: NavController = rememberNavController(),mediaPlayer: MediaPlayer  = MediaPlayer()
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
@@ -68,6 +71,7 @@ fun GameView(
         )
     }
 
+
     val updateInterval = 5
 
     LaunchedEffect(Unit) {
@@ -78,13 +82,13 @@ fun GameView(
         }
     }
 
-    GameCanvas(game = gameState, navController = navController)
+    GameCanvas(game = gameState, navController = navController, mediaPlayer = mediaPlayer)
 
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun GameCanvas(game: GameState, navController: NavController = rememberNavController()) {
+fun GameCanvas(game: GameState, navController: NavController = rememberNavController(),mediaPlayer: MediaPlayer = MediaPlayer()) {
     val pendulum = game.pendulum
     val context = LocalContext.current
     val gameRecord = getGameRecord(context!!)
@@ -92,6 +96,7 @@ fun GameCanvas(game: GameState, navController: NavController = rememberNavContro
     val borders = Borders()
     val background = Background()
 
+    val buttonPlayer = remember { MediaPlayer.create(context, R.raw.button_click) }
 
     Box(contentAlignment = Alignment.TopCenter) {
         Canvas(modifier = Modifier
@@ -214,6 +219,8 @@ fun GameCanvas(game: GameState, navController: NavController = rememberNavContro
             ) {
                 MenuButton(text = "Restart", onClick = {
                     game.prepareGame()
+                    buttonPlayer.start()
+                    buttonPlayer.setOnCompletionListener { mp -> mp.release()}
                     GameState.gameStarted = false
                     GameState.isPointerDown = false
                     GameState.isCollided = false
@@ -221,7 +228,13 @@ fun GameCanvas(game: GameState, navController: NavController = rememberNavContro
                 })
                 Box(modifier = Modifier.height(20.dp))
                 MenuButton(text = "Menu", onClick = {
-
+                    mediaPlayer.stop()
+                    mediaPlayer.reset()
+                    mediaPlayer.setDataSource(context, Uri.parse("android.resource://${context.packageName}/${R.raw.menu}"))
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
+                    buttonPlayer.start()
+                    buttonPlayer.setOnCompletionListener { mp -> mp.release()}
                     navController.navigate(ENavigation.MENU.name)
                 })
             }

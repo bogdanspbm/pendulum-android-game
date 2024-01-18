@@ -34,7 +34,7 @@ data class GameState(
         if (abs(pendulum.x) < fieldWidth / 2 - 60 - pendulum.radius || tick < 100) {
             return false
         }
-        
+
         return true
     }
 

@@ -1,5 +1,6 @@
 package org.bogdanspbm.pendulum
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,8 +36,16 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Game() {
+    val context = LocalContext.current
     var currentNavigation by remember { mutableStateOf(ENavigation.MENU) }
     val navController = rememberNavController()
+    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.menu) }
+    mediaPlayer.start()
+    mediaPlayer.setOnCompletionListener { mp ->
+        mp.reset()
+        mp.start()
+    }
+
 
     PendulumTheme {
         // A surface container using the 'background' color from the theme
@@ -45,17 +55,20 @@ fun Game() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = currentNavigation.name
+                startDestination = currentNavigation.name,
             ) {
                 composable(ENavigation.MENU.name) {
                     MainMenuView(
                         modifier = Modifier.fillMaxSize(),
-                        navController = navController
+                        navController = navController,
+                        mediaPlayer = mediaPlayer
                     )
                 }
                 composable(ENavigation.GAME.name) {
-                   GameView(  modifier = Modifier.fillMaxSize(),
-                       navController = navController)
+                    GameView(
+                        modifier = Modifier.fillMaxSize(),
+                        navController = navController, mediaPlayer = mediaPlayer
+                    )
                 }
             }
         }
