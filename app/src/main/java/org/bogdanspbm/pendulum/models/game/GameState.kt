@@ -1,8 +1,10 @@
 package org.bogdanspbm.pendulum.models.game
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.compose.ui.geometry.Offset
+import org.bogdanspbm.pendulum.R
 import org.bogdanspbm.pendulum.effects.ShakeEffect
 import org.bogdanspbm.pendulum.models.hook.Hook
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
@@ -50,6 +52,9 @@ data class GameState(
             if (score > getGameRecord(context!!)) {
                 saveGameRecord(context, score)
             }
+            val destroySound = MediaPlayer.create(context, R.raw.destroy)
+            destroySound.start()
+            destroySound.setOnCompletionListener { it -> it.release() }
             shakeEffect.enable(tick)
         }
 
