@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
+import org.bogdanspbm.pendulum.enums.ENavigation
 import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.field.Borders
 import org.bogdanspbm.pendulum.models.game.GameState
@@ -76,13 +78,13 @@ fun GameView(
         }
     }
 
-    GameCanvas(game = gameState)
+    GameCanvas(game = gameState, navController = navController)
 
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun GameCanvas(game: GameState) {
+fun GameCanvas(game: GameState, navController: NavController = rememberNavController()) {
     val pendulum = game.pendulum
     val context = LocalContext.current
     val gameRecord = getGameRecord(context!!)
@@ -111,8 +113,8 @@ fun GameCanvas(game: GameState) {
             }, onDraw = {
 
 
-            game.recordItem.draw(this, textMeasurer)
             background.draw(this, game.getOffset() + Offset(0f, pendulum.y % 1200))
+            game.recordItem.draw(this, textMeasurer)
             borders.draw(this, game.getOffset())
 
             // Line
@@ -198,6 +200,30 @@ fun GameCanvas(game: GameState) {
                     text = "Press To Start",
                     alignment = Paint.Align.CENTER
                 )
+            }
+        }
+        if (GameState.isCollided) {
+            Column(
+                modifier = Modifier
+                    .offset(y = 300.dp)
+                    .fillMaxWidth(0.8f)
+                    .wrapContentHeight()
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color.fromHex("#9256A7"))
+                    .padding(20.dp)
+            ) {
+                MenuButton(text = "Restart", onClick = {
+                    game.prepareGame()
+                    GameState.gameStarted = false
+                    GameState.isPointerDown = false
+                    GameState.isCollided = false
+                    navController.navigate(ENavigation.GAME.name)
+                })
+                Box(modifier = Modifier.height(20.dp))
+                MenuButton(text = "Menu", onClick = {
+
+                    navController.navigate(ENavigation.MENU.name)
+                })
             }
         }
     }

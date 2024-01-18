@@ -1,6 +1,7 @@
 package org.bogdanspbm.pendulum.models.game
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import org.bogdanspbm.pendulum.effects.ShakeEffect
 import org.bogdanspbm.pendulum.models.hook.Hook
@@ -10,6 +11,8 @@ import org.bogdanspbm.pendulum.utils.saveGameRecord
 import java.util.Date
 import kotlin.math.abs
 import kotlin.random.Random
+
+val TAG = "GameState"
 
 data class GameState(
     val time: Long = Date().time,
@@ -26,11 +29,12 @@ data class GameState(
 
     val recordItem: GameRecord = GameRecord(this, getGameRecord(context!!))
 
+
     fun isPendulumOutOfField(): Boolean {
-        if (abs(pendulum.x) < fieldWidth / 2 - 60 - pendulum.radius) {
+        if (abs(pendulum.x) < fieldWidth / 2 - 60 - pendulum.radius || tick < 100) {
             return false
         }
-
+        
         return true
     }
 
@@ -41,7 +45,7 @@ data class GameState(
 
         tick += (delta * speed).toInt()
 
-        if (isPendulumOutOfField() && !isCollided) {
+        if (!isCollided && isPendulumOutOfField()) {
             isCollided = true
             if (score > getGameRecord(context!!)) {
                 saveGameRecord(context, score)
@@ -76,7 +80,9 @@ data class GameState(
 
     fun prepareGame(): GameState {
         this.generateHooks()
+        pendulum.refresh()
         this.score = 0
+        this.tick = 0L
         return this
     }
 

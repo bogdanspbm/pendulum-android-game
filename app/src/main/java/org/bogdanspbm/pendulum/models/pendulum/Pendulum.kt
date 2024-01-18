@@ -16,6 +16,13 @@ data class Pendulum(
     var prevPositions: MutableList<Offset> = mutableListOf()
 ) {
 
+    fun refresh(){
+        x = 0f
+        y = 0f
+        speedY = 1f
+        speedX = 0f
+        rotationDirection = 1
+    }
     fun move(delta: Int) {
         prevPositions.add(Offset(x, -y))
 

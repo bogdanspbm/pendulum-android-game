@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.bogdanspbm.pendulum.enums.ENavigation
 import org.bogdanspbm.pendulum.models.field.Background
+import org.bogdanspbm.pendulum.models.game.GameState
 import org.bogdanspbm.pendulum.ui.theme.BungeeFontFamily
 import org.bogdanspbm.pendulum.ui.theme.BungeeTypography
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
@@ -71,6 +72,9 @@ fun MainMenuView(modifier: Modifier = Modifier, navController: NavController = r
                 .padding(20.dp)
         ) {
             MenuButton(text = "Start", onClick = {
+                GameState.gameStarted = false
+                GameState.isPointerDown = false
+                GameState.isCollided = false
                 navController.navigate(ENavigation.GAME.name)
             })
             Box(modifier = Modifier.height(20.dp))
