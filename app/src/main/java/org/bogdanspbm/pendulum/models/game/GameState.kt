@@ -29,6 +29,7 @@ data class GameState(
     val context: Context? = null
 ) {
 
+    var recordUpdated = false
     val recordItem: GameRecord = GameRecord(this, getGameRecord(context!!))
 
 
@@ -46,6 +47,16 @@ data class GameState(
         }
 
         tick += (delta * speed).toInt()
+
+        if (score > getGameRecord(context!!) && !recordUpdated) {
+            if( getGameRecord(context) > 0){
+                val destroySound = MediaPlayer.create(context, R.raw.record)
+                destroySound.start()
+                destroySound.setOnCompletionListener { it -> it.release() }
+            }
+
+            recordUpdated = true
+        }
 
         if (!isCollided && isPendulumOutOfField()) {
             isCollided = true
