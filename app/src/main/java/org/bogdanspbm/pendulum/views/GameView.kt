@@ -4,7 +4,9 @@ import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,8 +33,8 @@ import kotlinx.coroutines.delay
 import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.field.Borders
 import org.bogdanspbm.pendulum.models.game.GameState
+import org.bogdanspbm.pendulum.ui.theme.BungeeTypography
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
-import org.bogdanspbm.pendulum.utils.dpToPx
 import java.util.Date
 import kotlin.math.abs
 
@@ -142,17 +144,13 @@ fun GameCanvas(game: GameState) {
 
         })
 
-        Box(
-            Modifier
-                .offset(y = 8.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.Black.copy(alpha = 0.1f))
-        ) {
-            Text(
-                modifier = Modifier.padding(12.dp), text = "${
-                    game.score
-                }",
-                style = MaterialTheme.typography.headlineMedium
+        Column(
+            modifier= Modifier.fillMaxWidth().offset(x = 32.dp, y = -24.dp),
+            horizontalAlignment = Alignment.Start)
+         {
+            Text(text = "${game.score}",
+                style = BungeeTypography.titleLarge,
+                color = Color.White
             )
         }
 

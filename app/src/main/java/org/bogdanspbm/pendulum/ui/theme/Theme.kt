@@ -64,7 +64,7 @@ fun PendulumTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = BungeeTypography,
         content = content
     )
 }
