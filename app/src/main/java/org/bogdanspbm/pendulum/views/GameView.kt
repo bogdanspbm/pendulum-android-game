@@ -1,16 +1,19 @@
 package org.bogdanspbm.pendulum.views
 
 import OutlinedText
+import android.graphics.Paint
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -153,14 +156,22 @@ fun GameCanvas(game: GameState) {
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .offset(x = 32.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         )
         {
-            OutlinedText(modifier = Modifier.height(48.dp), text = "${game.score}")
             OutlinedText(
-                modifier = Modifier.height(48.dp).offset(y= -6.dp),
+                modifier = Modifier
+                    .offset(x = 32.dp)
+                    .height(48.dp)
+                    .width(100.dp),
+                text = "${game.score}"
+            )
+            OutlinedText(
+                modifier = Modifier
+                    .height(48.dp)
+                    .width(100.dp)
+                    .offset(x = 32.dp, y = -6.dp),
                 fontSize = 50f,
                 textColor = Color.fromHex("#FFC700").toArgb(),
                 text = "${gameRecord}"
@@ -170,13 +181,15 @@ fun GameCanvas(game: GameState) {
         if (!GameState.gameStarted) {
             Box(
                 Modifier
+                    .fillMaxWidth(1f)
+                    .height(64.dp)
                     .offset(y = 600.dp)
-                    .clip(RoundedCornerShape(16.dp))
                     .background(Color.Black.copy(alpha = 0.1f))
             ) {
-                Text(
-                    modifier = Modifier.padding(12.dp), text = "Press to Start",
-                    style = MaterialTheme.typography.headlineMedium
+                OutlinedText(
+                    modifier = Modifier.offset(y=8.dp).fillMaxSize(),
+                    text = "Press To Start",
+                    alignment = Paint.Align.CENTER
                 )
             }
         }

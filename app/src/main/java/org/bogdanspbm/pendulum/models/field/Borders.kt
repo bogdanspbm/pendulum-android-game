@@ -33,7 +33,7 @@ class Borders {
 
         // Shadow
         val brushLeft = Brush.horizontalGradient(
-            colors = listOf(Color.Black.copy(alpha = 0.2f), Color.Transparent),
+            colors = listOf(Color.Black.copy(alpha = 0.15f), Color.Transparent),
             startX = 60f,
             endX = 150f
         )
@@ -45,7 +45,7 @@ class Borders {
         )
 
         val brushRight = Brush.horizontalGradient(
-            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.2f)),
+            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.15f)),
             startX = scope.size.width - 210,
             endX = scope.size.width - 60
         )

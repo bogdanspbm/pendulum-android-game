@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
@@ -24,7 +25,8 @@ fun OutlinedText(
     modifier: Modifier = Modifier,
     textColor: Int = Color.WHITE,
     text: String = "",
-    textStrokeWidth : Float = 18f,
+    alignment: android.graphics.Paint.Align? = android.graphics.Paint.Align.LEFT,
+    textStrokeWidth: Float = 18f,
     fontSize: Float = 100f
 ) {
 
@@ -35,6 +37,7 @@ fun OutlinedText(
         color = Color.BLACK
         strokeWidth = textStrokeWidth
         strokeMiter = 10f
+        textAlign = alignment
         typeface = ResourcesCompat.getFont(LocalContext.current, R.font.bungee)
         strokeJoin = android.graphics.Paint.Join.ROUND
     }
@@ -45,6 +48,7 @@ fun OutlinedText(
         style = android.graphics.Paint.Style.FILL
         textSize = fontSize
         color = textColor
+        textAlign = alignment
         typeface = ResourcesCompat.getFont(LocalContext.current, R.font.bungee)
     }
 
@@ -54,14 +58,14 @@ fun OutlinedText(
             drawIntoCanvas {
                 it.nativeCanvas.drawText(
                     text,
-                    0f,
+                    if (alignment != android.graphics.Paint.Align.CENTER) 0f else size.width / 2,
                     fontSize,
                     textPaintStroke
                 )
 
                 it.nativeCanvas.drawText(
                     text,
-                    0f,
+                    if (alignment != android.graphics.Paint.Align.CENTER) 0f else size.width / 2,
                     fontSize,
                     textPaint
                 )
@@ -74,6 +78,10 @@ fun OutlinedText(
 @Composable
 fun GreetingPreview() {
     PendulumTheme {
-        OutlinedText(modifier = Modifier.size(600.dp, 80.dp), text = "Hello, World!")
+        OutlinedText(
+            modifier = Modifier.size(600.dp, 80.dp),
+            alignment = android.graphics.Paint.Align.CENTER,
+            text = "Hello, World!"
+        )
     }
 }
