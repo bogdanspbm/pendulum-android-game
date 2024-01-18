@@ -96,7 +96,7 @@ data class Hook(
         )
 
         scope.drawCircle(
-            color = lerpColor(Color.fromHex("#121212"), Color.fromHex("DFD600"), (sin(tick.toDouble() / 300).toFloat() + 1) / 2),
+            color = lerpColor(Color.fromHex("#121212"), Color.fromHex("#FFC700"), (sin(tick.toDouble() / 300).toFloat() + 1) / 2),
             radius = this.radius / 2 - 4,
             center = Offset(
                 x + scope.size.width / 2,

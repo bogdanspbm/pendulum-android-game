@@ -162,7 +162,7 @@ fun GameCanvas(game: GameState) {
             OutlinedText(
                 modifier = Modifier.height(48.dp).offset(y= -6.dp),
                 fontSize = 50f,
-                textColor = Color.fromHex("FFC700").toArgb(),
+                textColor = Color.fromHex("#FFC700").toArgb(),
                 text = "${gameRecord}"
             )
         }
