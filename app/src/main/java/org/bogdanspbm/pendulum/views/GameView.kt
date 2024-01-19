@@ -9,7 +9,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,8 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +43,6 @@ import org.bogdanspbm.pendulum.enums.ENavigation
 import org.bogdanspbm.pendulum.models.field.Background
 import org.bogdanspbm.pendulum.models.field.Borders
 import org.bogdanspbm.pendulum.models.game.GameState
-import org.bogdanspbm.pendulum.ui.theme.BungeeTypography
 import org.bogdanspbm.pendulum.ui.theme.PendulumTheme
 import org.bogdanspbm.pendulum.utils.fromHex
 import org.bogdanspbm.pendulum.utils.getGameRecord
@@ -121,19 +117,7 @@ fun GameCanvas(game: GameState, navController: NavController = rememberNavContro
             background.draw(this, game.getOffset() + Offset(0f, pendulum.y % 1200))
             game.recordItem.draw(this, textMeasurer)
             borders.draw(this, game.getOffset())
-
-            // Line
-            drawLine(
-                color = Color.Blue,
-                start = Offset(
-                    pendulum.x + size.width / 2 + pendulum.speedX * 2000,
-                    size.height / 2 - pendulum.speedY * 2000
-                ) + game.getOffset(),
-                end = Offset(
-                    pendulum.x + size.width / 2 - pendulum.speedX * 2000,
-                    size.height / 2 + pendulum.speedY * 2000
-                ) + game.getOffset()
-            )
+            
 
             // Pendulum
             pendulum.draw(this, game.getOffset())

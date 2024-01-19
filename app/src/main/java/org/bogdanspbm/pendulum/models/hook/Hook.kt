@@ -2,11 +2,16 @@ package org.bogdanspbm.pendulum.models.hook
 
 import android.util.Log
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
 import org.bogdanspbm.pendulum.models.pendulum.Pendulum
 import org.bogdanspbm.pendulum.utils.fromHex
 import org.bogdanspbm.pendulum.utils.lerpColor
+import kotlin.math.cos
 import kotlin.math.sin
 
 data class Hook(
@@ -68,22 +73,66 @@ data class Hook(
     }
 
     fun draw(scope: DrawScope, offset: Offset, tick: Long) {
-        scope.drawCircle(
-            color = Color.fromHex("#373737"),
-            radius = this.radius,
-            center = Offset(
-                x + scope.size.width / 2,
-                scope.size.height / 2 - y
-            ) + offset
+
+        val spikeCount = 30
+        val spikeHeight = 10f
+        val spikeAngle = 360f / spikeCount
+
+        val path = Path()
+        val center = Offset(
+            x + scope.size.width / 2,
+            scope.size.height / 2 - y
+        ) + offset
+
+        for (i in 0 until spikeCount) {
+            val spikeStartX =
+                center.x + radius * cos(Math.toRadians(i * spikeAngle.toDouble())).toFloat()
+            val spikeStartY =
+                center.y + radius * sin(Math.toRadians(i * spikeAngle.toDouble())).toFloat()
+
+            val spikeMidX =
+                center.x + (radius + spikeHeight) * cos(Math.toRadians((i * spikeAngle + spikeAngle / 2).toDouble())).toFloat()
+            val spikeMidY =
+                center.y + (radius + spikeHeight) * sin(Math.toRadians((i * spikeAngle + spikeAngle / 2).toDouble())).toFloat()
+
+            val spikeEndX =
+                center.x + radius * cos(Math.toRadians((i * spikeAngle + spikeAngle).toDouble())).toFloat()
+            val spikeEndY =
+                center.y + radius * sin(Math.toRadians((i * spikeAngle + spikeAngle).toDouble())).toFloat()
+
+            if (i == 0) {
+                path.moveTo(spikeStartX, spikeStartY)
+            } else {
+                path.lineTo(spikeStartX, spikeStartY)
+            }
+
+            path.lineTo(spikeMidX, spikeMidY)
+            path.lineTo(spikeEndX, spikeEndY)
+        }
+        path.close()
+
+
+        scope.drawPath(path, color = Color.fromHex("#585858"), style = Fill)
+        scope.drawPath(path, color = Color.fromHex("#373737"), style = Stroke(4f))
+
+
+        val brush = Brush.radialGradient(
+            colors = arrayListOf(
+                lerpColor(
+                    Color.fromHex("#121212"),
+                    Color.fromHex("#FF0000"),
+                    (sin(tick.toDouble() / 300).toFloat() + 1) / 2
+                ).copy(alpha = 0.8f),
+                Color.fromHex("#FF0000").copy(alpha = 0.0f)
+            ),
+            center = center,
+            radius = this.radius
         )
 
         scope.drawCircle(
-            color = Color.fromHex("#585858"),
-            radius = this.radius - 4,
-            center = Offset(
-                x + scope.size.width / 2,
-                scope.size.height / 2 - y
-            ) + offset
+            brush = brush,
+            center = center,
+            radius = this.radius
         )
 
         scope.drawCircle(
@@ -96,12 +145,13 @@ data class Hook(
         )
 
         scope.drawCircle(
-            color = lerpColor(Color.fromHex("#121212"), Color.fromHex("#FFC700"), (sin(tick.toDouble() / 300).toFloat() + 1) / 2),
+            color = lerpColor(
+                Color.fromHex("#121212"),
+                Color.fromHex("#FF0000"),
+                (sin(tick.toDouble() / 300).toFloat() + 1) / 2
+            ),
             radius = this.radius / 2 - 4,
-            center = Offset(
-                x + scope.size.width / 2,
-                scope.size.height / 2 - y
-            ) + offset
+            center = center
         )
     }
 }

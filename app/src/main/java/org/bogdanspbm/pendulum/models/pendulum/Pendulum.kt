@@ -40,22 +40,10 @@ data class Pendulum(
 
     fun draw(scope: DrawScope, offset: Offset){
 
-        scope.drawCircle(
-            color = Color.fromHex("#C40000"),
-            radius = radius,
-            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
-        )
-
-        scope.drawCircle(
-            color = Color.Red,
-            radius = radius - 4,
-            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
-        )
-
         prevPositions.forEachIndexed { index, trailPosition ->
             val alpha = (index.toFloat() / prevPositions.size.toFloat()) / 10
             scope.drawCircle(
-                color = Color.Red.copy(alpha = alpha),
+                color = Color.fromHex("#FFC700").copy(alpha = alpha),
                 radius = radius * (alpha * 5 + 0.5f),
                 center = trailPosition + Offset(
                     scope.size.width / 2,
@@ -63,6 +51,31 @@ data class Pendulum(
                 ) + offset
             )
         }
+
+        scope.drawCircle(
+            color = Color.fromHex("#373737"),
+            radius = this.radius,
+            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
+        )
+
+        scope.drawCircle(
+            color = Color.fromHex("#585858"),
+            radius = this.radius - 4,
+            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
+        )
+
+        scope.drawCircle(
+            color = Color.fromHex("#373737"),
+            radius = this.radius / 2,
+            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
+        )
+
+        scope.drawCircle(
+            color =  Color.fromHex("#FFC700"),
+            radius = this.radius / 2 - 4,
+            center = Offset(x + scope.size.width / 2, scope.size.height / 2) + offset
+        )
+
     }
 
 
